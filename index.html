@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>ex</title>
+      <style>
+         body .file-container:last-child {
+            display: block;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="file-container"></div>
+      <button onclick="addFileInput()">파일 선택</button>
+      <button onclick="uploadFiles()">업로드</button>
+
+      <script>
+         var fileIndex = 0
+
+         function addFileInput() {
+            var fileInput = document.createElement("input")
+            fileInput.type = "file"
+            fileInput.name = "file-" + fileIndex
+            fileInput.style.display = "none" // 파일 입력 요소를 화면에서 숨깁니다.
+            fileInput.addEventListener("change", handleFileSelect, false)
+            document.getElementById("file-container").appendChild(fileInput)
+            fileInput.click() // 파일 선택 창을 자동으로 엽니다.
+            fileIndex++
+         }
+
+         function handleFileSelect(event) {
+            var files = event.target.files
+            for (var i = 0; i < files.length; i++) {
+               var file = files[i]
+               var reader = new FileReader()
+               reader.onload = function (e) {
+                  var fileData = e.target.result
+                  createFileElement(file.name, fileData)
+               }
+               reader.readAsDataURL(file)
+            }
+         }
+
+         function createFileElement(filename, fileData) {
+            var fileElement = document.createElement("div")
+            fileElement.textContent = filename
+            fileElement.dataset.fileData = fileData
+            document.getElementById("file-container").appendChild(fileElement)
+         }
+
+         function uploadFiles() {
+            var fileElements = document.querySelectorAll("#file-container div")
+            for (var i = 0; i < fileElements.length; i++) {
+               var fileElement = fileElements[i]
+               var filename = fileElement.textContent
+               var fileData = fileElement.dataset.fileData
+               // 실제 파일 업로드 처리를 수행하는 함수 호출
+               uploadFile(filename, fileData)
+            }
+         }
+
+         function uploadFile(filename, fileData) {
+            // 파일 업로드 처리를 수행하는 로직을 추가하세요.
+            // 여기서는 콘솔에 파일 이름과 데이터를 출력하는 예시 코드입니다.
+            console.log("업로드한 파일 이름:", filename)
+            console.log("업로드한 파일 데이터:", fileData)
+         }
+      </script>
+   </body>
+</html>
